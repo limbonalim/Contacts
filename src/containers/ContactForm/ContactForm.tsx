@@ -18,7 +18,8 @@ const ContactForm = () => {
   });
   const navigate = useNavigate();
   const {id} = useParams() as {id: string};
-
+  console.log(id)
+    
   let photo = (
     <img
       className="rounded border"
