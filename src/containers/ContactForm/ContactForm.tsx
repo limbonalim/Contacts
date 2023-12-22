@@ -3,8 +3,8 @@ import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import noImage from '../../assets/NoImage.png';
 import {EditData, FormContact} from '../../types';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {createContact, editContact} from '../../store/contactThunks';
-import {selectCurrentContact} from '../../store/contactSlice';
+import {createContact, editContact, fetchContacts} from '../../store/contactThunks';
+import {clearCurrent, selectCurrentContact} from '../../store/contactSlice';
 
 
 const ContactForm = () => {
@@ -55,16 +55,19 @@ const ContactForm = () => {
     });
   };
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (id) {
       const data: EditData = {
         id,
         contact
       };
-      dispatch(editContact(data));
+      await dispatch(editContact(data));
+      dispatch(clearCurrent());
+      dispatch(fetchContacts());
     } else {
-      dispatch(createContact(contact));
+      await dispatch(createContact(contact));
+      dispatch(fetchContacts());
     }
     navigate('/');
   };
@@ -144,7 +147,11 @@ const ContactForm = () => {
         </div>
         <div className="d-flex gap-3">
           <button className="btn btn-outline-success" type="submit">{id ? 'Edit' : 'Save'}</button>
-          <Link to="/" className="btn btn-outline-primary">Back to contacts</Link>
+          <Link
+            onClick={() => dispatch(clearCurrent())}
+            to="/"
+            className="btn btn-outline-primary"
+          >Back to contacts</Link>
         </div>
       </form>
     </div>

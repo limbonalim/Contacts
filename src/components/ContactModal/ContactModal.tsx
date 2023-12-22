@@ -1,7 +1,7 @@
 import {Button, Modal} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {closeModal, selectCurrentContact, selectShowModal} from '../../store/contactSlice';
+import {clearCurrent, closeModal, selectCurrentContact, selectShowModal} from '../../store/contactSlice';
 import noImage from '../../assets/NoImage.png';
 import {deleteContact, fetchContacts} from '../../store/contactThunks';
 import {Contact} from '../../types';
@@ -28,13 +28,18 @@ const ContactModal = () => {
 
   const handleDelete = async () => {
     await dispatch(deleteContact(contact.id));
-    dispatch(closeModal(false));
+    handleClose();
     dispatch(fetchContacts());
+  };
+
+  const handleClose = () => {
+    dispatch(closeModal());
+    dispatch(clearCurrent());
   };
 
   return contact && (
     <>
-      <Modal show={show} onHide={() => dispatch(closeModal(false))}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{contact.name}</Modal.Title>
         </Modal.Header>
@@ -60,7 +65,7 @@ const ContactModal = () => {
           </Button>
           <Link
             to={path}
-            onClick={() => dispatch(closeModal(true))}
+            onClick={() => dispatch(closeModal())}
             className="btn btn-outline-primary"
           >
             Edit

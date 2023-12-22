@@ -23,13 +23,11 @@ const contactSlice = createSlice({
       state.showModal = true;
       state.currentContact = payload;
     },
-    closeModal: (state, {payload}) => {
-      if (payload) {
-        state.showModal = false;
-      } else {
-        state.showModal = false;
-        state.currentContact = null;
-      }
+    closeModal: (state) => {
+      state.showModal = false;
+    },
+    clearCurrent: (state) => {
+      state.currentContact = null;
     }
   },
   extraReducers: (builder) => {
@@ -80,5 +78,5 @@ export const selectList = (state: RootState) => state.contact.list;
 export const selectShowModal = (state: RootState) => state.contact.showModal;
 export const selectCurrentContact = (state: RootState) => state.contact.currentContact;
 
-export const {openModal, closeModal} = contactSlice.actions;
+export const {openModal, closeModal, clearCurrent} = contactSlice.actions;
 export const contactReducer = contactSlice.reducer;
