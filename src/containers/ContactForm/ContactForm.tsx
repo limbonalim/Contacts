@@ -1,25 +1,23 @@
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {ChangeEvent, FormEvent, useState} from 'react';
-import noImage from '../../assets/NoImage.png'
+import noImage from '../../assets/NoImage.png';
+import {FormContact} from '../../types';
+import {useAppDispatch} from '../../app/hooks';
+import {createContact} from '../../store/contactThunks';
 
-interface Contact {
-  name: string;
-  phone: string;
-  email: string;
-  photo: string;
-}
 
 const ContactForm = () => {
-  const [contact, setContact] = useState<Contact>({
+  const [contact, setContact] = useState<FormContact>({
     name: '',
     phone: '',
     email: '',
     photo: ''
   });
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const {id} = useParams() as {id: string};
-  console.log(id)
-    
+  const {id} = useParams() as { id: string };
+  console.log(id);
+
   let photo = (
     <img
       className="rounded border"
@@ -40,6 +38,7 @@ const ContactForm = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    dispatch(createContact(contact));
     navigate('/');
   };
 
@@ -48,7 +47,7 @@ const ContactForm = () => {
       <img
         className="rounded border"
         src={contact.photo}
-        alt={contact.name? contact.name : 'No name'}
+        alt={contact.name ? contact.name : 'No name'}
       />
     );
   }

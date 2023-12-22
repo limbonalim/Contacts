@@ -1,4 +1,5 @@
 import React from 'react';
+import './Contact.css';
 
 interface Props {
   photo: string;
@@ -8,7 +9,7 @@ interface Props {
 const MemoContact: React.FC<Props> = React.memo(function Contact({photo, name}) {
   return (
     <div
-      className="d-flex align-items-center gap-3 border border-2 rounded"
+      className="d-flex align-items-center gap-3 border border-2 rounded Contact"
       style={{maxHeight: '200px'}}
     >
       <img

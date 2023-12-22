@@ -15,9 +15,7 @@ const App = () => {
           <Route path="/edit-contac/:id" element={(<ContactForm/>)}/>
           <Route path="*" element={(<NotFound/>)}/>
         </Routes>
-
       </Layout>
-
     </>
   );
 };
