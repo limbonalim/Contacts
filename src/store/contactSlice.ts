@@ -10,6 +10,8 @@ interface ContactState {
   isLoading: boolean;
   isFormSubmit: boolean;
   isDeleting: boolean;
+  isError: boolean;
+  errorMessage: string | undefined;
 }
 
 const initialState: ContactState = {
@@ -18,7 +20,9 @@ const initialState: ContactState = {
   currentContact: null,
   isLoading: false,
   isFormSubmit: false,
-  isDeleting: false
+  isDeleting: false,
+  isError: false,
+  errorMessage: undefined,
 };
 
 const contactSlice = createSlice({
@@ -34,6 +38,10 @@ const contactSlice = createSlice({
     },
     clearCurrent: (state) => {
       state.currentContact = null;
+    },
+    closeAlert: (state) => {
+      state.isError = false;
+      state.errorMessage = undefined;
     }
   },
   extraReducers: (builder) => {
@@ -44,9 +52,10 @@ const contactSlice = createSlice({
       state.list = payload;
       state.isLoading = false;
     });
-    builder.addCase(fetchContacts.rejected, (state) => {
-      console.log('[fetchContacts.rejected]   ' + state);
+    builder.addCase(fetchContacts.rejected, (state, {error}) => {
       state.isLoading = false;
+      state.isError = true;
+      state.errorMessage = error.message;
     });
     builder.addCase(createContact.pending, (state) => {
       state.isFormSubmit = true;
@@ -54,9 +63,10 @@ const contactSlice = createSlice({
     builder.addCase(createContact.fulfilled, (state) => {
       state.isFormSubmit = false;
     });
-    builder.addCase(createContact.rejected, (state) => {
-      console.log('[createContact.rejected]   ' + state);
+    builder.addCase(createContact.rejected, (state, {error}) => {
       state.isFormSubmit = false;
+      state.isError = true;
+      state.errorMessage = error.message;
     });
     builder.addCase(editContact.pending, (state) => {
       state.isFormSubmit = true;
@@ -64,9 +74,10 @@ const contactSlice = createSlice({
     builder.addCase(editContact.fulfilled, (state) => {
       state.isFormSubmit = false;
     });
-    builder.addCase(editContact.rejected, (state) => {
-      console.log('[editContact.rejected]   ' + state);
+    builder.addCase(editContact.rejected, (state, {error}) => {
       state.isFormSubmit = false;
+      state.isError = true;
+      state.errorMessage = error.message;
     });
     builder.addCase(deleteContact.pending, (state) => {
       state.isDeleting = true;
@@ -74,9 +85,10 @@ const contactSlice = createSlice({
     builder.addCase(deleteContact.fulfilled, (state) => {
       state.isDeleting = false;
     });
-    builder.addCase(deleteContact.rejected, (state) => {
-      console.log('[deleteContact.rejected]   ' + state);
+    builder.addCase(deleteContact.rejected, (state, {error}) => {
       state.isDeleting = false;
+      state.isError = true;
+      state.errorMessage = error.message;
     });
   }
 });
@@ -88,10 +100,13 @@ export const selectCurrentContact = (state: RootState) => state.contact.currentC
 export const selectIsLoading = (state: RootState) => state.contact.isLoading;
 export const selectIsFormSubmit = (state: RootState) => state.contact.isFormSubmit;
 export const selectIsDeleting = (state: RootState) => state.contact.isDeleting;
+export const selectIsError = (state: RootState) => state.contact.isError;
+export const selectErrorMessage = (state: RootState) => state.contact.errorMessage;
 
 export const {
   openModal,
   closeModal,
-  clearCurrent
+  clearCurrent,
+  closeAlert
 } = contactSlice.actions;
 export const contactReducer = contactSlice.reducer;
