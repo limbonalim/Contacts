@@ -11,7 +11,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchContacts());
-  }, [dispatch]);
+  }, [dispatch, contacts]);
 
   return (
     <div className="d-flex flex-column gap-2">

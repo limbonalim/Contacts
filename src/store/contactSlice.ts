@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {Contact} from '../types';
-import {createContact, fetchContacts} from './contactThunks';
+import {createContact, deleteContact, editContact, fetchContacts} from './contactThunks';
 import {RootState} from '../app/store';
 
 interface ContactState {
@@ -23,9 +23,13 @@ const contactSlice = createSlice({
       state.showModal = true;
       state.currentContact = payload;
     },
-    closeModal: (state) => {
-      state.showModal = false;
-      state.currentContact = null;
+    closeModal: (state, {payload}) => {
+      if (payload) {
+        state.showModal = false;
+      } else {
+        state.showModal = false;
+        state.currentContact = null;
+      }
     }
   },
   extraReducers: (builder) => {
@@ -44,10 +48,29 @@ const contactSlice = createSlice({
     });
     builder.addCase(createContact.fulfilled, (state) => {
       console.log('[createContact.fulfilled]   ' + state);
-
     });
     builder.addCase(createContact.rejected, (state) => {
       console.log('[createContact.rejected]   ' + state);
+    });
+    builder.addCase(editContact.pending, (state) => {
+      console.log('[editContact.pending]   ' + state);
+    });
+    builder.addCase(editContact.fulfilled, (state) => {
+      console.log('[editContact.fulfilled]   ' + state);
+
+    });
+    builder.addCase(editContact.rejected, (state) => {
+      console.log('[editContact.rejected]   ' + state);
+    });
+    builder.addCase(deleteContact.pending, (state) => {
+      console.log('[deleteContact.pending]   ' + state);
+    });
+    builder.addCase(deleteContact.fulfilled, (state) => {
+      console.log('[deleteContact.fulfilled]   ' + state);
+
+    });
+    builder.addCase(deleteContact.rejected, (state) => {
+      console.log('[deleteContact.rejected]   ' + state);
     });
   }
 });

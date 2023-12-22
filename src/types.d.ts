@@ -8,6 +8,11 @@ export interface Contact {
 
 export type FormContact = Omit<Contact, 'id'>
 
+export interface EditData {
+  id: string;
+  contact: FormContact;
+}
+
 export interface ApiData {
   [id: string]: FormContact;
 }

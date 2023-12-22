@@ -1,9 +1,10 @@
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import {ChangeEvent, FormEvent, useState} from 'react';
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import noImage from '../../assets/NoImage.png';
-import {FormContact} from '../../types';
-import {useAppDispatch} from '../../app/hooks';
-import {createContact} from '../../store/contactThunks';
+import {EditData, FormContact} from '../../types';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {createContact, editContact} from '../../store/contactThunks';
+import {selectCurrentContact} from '../../store/contactSlice';
 
 
 const ContactForm = () => {
@@ -14,9 +15,27 @@ const ContactForm = () => {
     photo: ''
   });
   const dispatch = useAppDispatch();
+  const oldContact = useAppSelector(selectCurrentContact);
   const navigate = useNavigate();
-  const {id} = useParams() as { id: string };
-  console.log(id);
+  const {id} = useParams();
+
+  useEffect(() => {
+    if (id && oldContact) {
+      setContact({
+        name: oldContact.name,
+        phone: oldContact.phone,
+        email: oldContact.email,
+        photo: oldContact.photo
+      });
+    } else {
+      setContact({
+        name: '',
+        phone: '',
+        email: '',
+        photo: ''
+      });
+    }
+  }, [id]);
 
   let photo = (
     <img
@@ -38,7 +57,15 @@ const ContactForm = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(createContact(contact));
+    if (id) {
+      const data: EditData = {
+        id,
+        contact
+      };
+      dispatch(editContact(data));
+    } else {
+      dispatch(createContact(contact));
+    }
     navigate('/');
   };
 
@@ -56,7 +83,7 @@ const ContactForm = () => {
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <h1 className="text-secondary">Add new contact</h1>
+        <h1 className="text-secondary">{id ? 'Edit contact' : 'Add new contact'}</h1>
         <div className="row mb-3">
           <div className="col-12 col-md-6">
             <div className="mb-3">
@@ -116,7 +143,7 @@ const ContactForm = () => {
           </div>
         </div>
         <div className="d-flex gap-3">
-          <button className="btn btn-outline-success" type="submit">Save</button>
+          <button className="btn btn-outline-success" type="submit">{id ? 'Edit' : 'Save'}</button>
           <Link to="/" className="btn btn-outline-primary">Back to contacts</Link>
         </div>
       </form>

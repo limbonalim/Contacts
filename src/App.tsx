@@ -14,7 +14,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={(<Home/>)}/>
           <Route path="/new-contact" element={(<ContactForm/>)}/>
-          <Route path="/edit-contac/:id" element={(<ContactForm/>)}/>
+          <Route path="/edit-contact/:id" element={(<ContactForm/>)}/>
           <Route path="*" element={(<NotFound/>)}/>
         </Routes>
       </Layout>
