@@ -5,16 +5,29 @@ import {RootState} from '../app/store';
 
 interface ContactState {
   list: Contact[];
+  showModal: boolean;
+  currentContact: Contact | null;
 }
 
 const initialState: ContactState = {
   list: [],
+  showModal: false,
+  currentContact: null,
 };
 
 const contactSlice = createSlice({
   name: 'contact',
   initialState,
-  reducers: {},
+  reducers: {
+    openModal: (state, {payload}) => {
+      state.showModal = true;
+      state.currentContact = payload;
+    },
+    closeModal: (state) => {
+      state.showModal = false;
+      state.currentContact = null;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchContacts.pending, (state) => {
       console.log('[fetchContacts.pending]   ' + state);
@@ -41,6 +54,8 @@ const contactSlice = createSlice({
 
 
 export const selectList = (state: RootState) => state.contact.list;
+export const selectShowModal = (state: RootState) => state.contact.showModal;
+export const selectCurrentContact = (state: RootState) => state.contact.currentContact;
 
-export const {} = contactSlice.actions;
+export const {openModal, closeModal} = contactSlice.actions;
 export const contactReducer = contactSlice.reducer;

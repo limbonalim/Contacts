@@ -3,11 +3,13 @@ import Layout from './containers/Layout/Layout';
 import ContactForm from './containers/ContactForm/ContactForm';
 import Home from './containers/Home/Home';
 import NotFound from './containers/NotFound/NotFound';
+import ContactModal from './components/ContactModal/ContactModal';
 
 const App = () => {
 
   return (
     <>
+      <ContactModal/>
       <Layout>
         <Routes>
           <Route path="/" element={(<Home/>)}/>

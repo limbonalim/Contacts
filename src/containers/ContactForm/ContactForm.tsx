@@ -46,6 +46,7 @@ const ContactForm = () => {
     photo = (
       <img
         className="rounded border"
+        style={{maxHeight: '200px', maxWidth: '300px'}}
         src={contact.photo}
         alt={contact.name ? contact.name : 'No name'}
       />

@@ -1,9 +1,8 @@
+import {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {fetchContacts} from '../../store/contactThunks';
-import {useEffect} from 'react';
 import {selectList} from '../../store/contactSlice';
 import Contact from '../../components/Contact/Contact';
-import noImage from '../../assets/NoImage.png';
 
 
 const Home = () => {
@@ -19,8 +18,7 @@ const Home = () => {
       {contacts.map((contact) => (
         <Contact
           key={contact.id}
-          photo={contact.photo ? contact.photo : noImage}
-          name={contact.name}
+          contact={contact}
         />))
       }
     </div>
