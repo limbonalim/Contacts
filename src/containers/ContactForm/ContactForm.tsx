@@ -4,7 +4,7 @@ import noImage from '../../assets/NoImage.png';
 import {EditData, FormContact} from '../../types';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {createContact, editContact, fetchContacts} from '../../store/contactThunks';
-import {clearCurrent, selectCurrentContact} from '../../store/contactSlice';
+import {clearCurrent, selectCurrentContact, selectIsFormSubmit} from '../../store/contactSlice';
 
 
 const ContactForm = () => {
@@ -16,6 +16,7 @@ const ContactForm = () => {
   });
   const dispatch = useAppDispatch();
   const oldContact = useAppSelector(selectCurrentContact);
+  const isDisabled = useAppSelector(selectIsFormSubmit);
   const navigate = useNavigate();
   const {id} = useParams();
 
@@ -146,7 +147,11 @@ const ContactForm = () => {
           </div>
         </div>
         <div className="d-flex gap-3">
-          <button className="btn btn-outline-success" type="submit">{id ? 'Edit' : 'Save'}</button>
+          <button
+            disabled={isDisabled}
+            className="btn btn-outline-success"
+            type="submit"
+          >{id ? 'Edit' : 'Save'}</button>
           <Link
             onClick={() => dispatch(clearCurrent())}
             to="/"

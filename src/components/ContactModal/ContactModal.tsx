@@ -1,7 +1,13 @@
 import {Button, Modal} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {clearCurrent, closeModal, selectCurrentContact, selectShowModal} from '../../store/contactSlice';
+import {
+  clearCurrent,
+  closeModal,
+  selectCurrentContact,
+  selectIsDeleting,
+  selectShowModal
+} from '../../store/contactSlice';
 import noImage from '../../assets/NoImage.png';
 import {deleteContact, fetchContacts} from '../../store/contactThunks';
 import {Contact} from '../../types';
@@ -10,6 +16,7 @@ import {Contact} from '../../types';
 const ContactModal = () => {
   const show = useAppSelector(selectShowModal);
   const contact = useAppSelector(selectCurrentContact) as Contact;
+  const isDeleting = useAppSelector(selectIsDeleting);
   const dispatch = useAppDispatch();
   const path = contact ? `/edit-contact/${contact.id}` : '/';
 
@@ -37,6 +44,17 @@ const ContactModal = () => {
     dispatch(clearCurrent());
   };
 
+  const link = (
+    <Link
+      to={path}
+      onClick={() => dispatch(closeModal())}
+      aria-disabled={isDeleting}
+      className="btn btn-outline-primary"
+    >
+      Edit
+    </Link>
+  );
+
   return contact && (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -60,16 +78,14 @@ const ContactModal = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-danger" onClick={handleDelete}>
+          <Button
+            variant="outline-danger"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
             Delete
           </Button>
-          <Link
-            to={path}
-            onClick={() => dispatch(closeModal())}
-            className="btn btn-outline-primary"
-          >
-            Edit
-          </Link>
+          {isDeleting ? null : link}
         </Modal.Footer>
       </Modal>
     </>
